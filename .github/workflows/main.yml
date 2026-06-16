@@ -18,16 +18,22 @@ jobs:
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
+      - name: Criar projeto Flutter novo
+        run: flutter create --project-name financasfacil_app temp_app
+      - name: Copiar codigo fonte
+        run: |
+          cp -r financasfacil/lib/* temp_app/lib/
+          cp financasfacil/pubspec.yaml temp_app/pubspec.yaml
       - name: Instalar dependencias
         run: flutter pub get
-        working-directory: financasfacil
+        working-directory: temp_app
       - name: Adicionar http
         run: flutter pub add http
-        working-directory: financasfacil
+        working-directory: temp_app
       - name: Compilar AAB
         run: flutter build appbundle --release
-        working-directory: financasfacil
+        working-directory: temp_app
       - uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
-          path: financasfacil/build/app/outputs/bundle/release/app-release.aab
+          path: temp_app/build/app/outputs/bundle/release/app-release.aab

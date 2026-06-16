@@ -1,4 +1,4 @@
-name: Compilar FinançasFácil para Play Store
+name: Compilar FinancasFacil para Play Store
 
 on:
   push:
@@ -18,10 +18,16 @@ jobs:
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
-      - run: flutter pub get
-      - run: flutter pub add http
-      - run: flutter build appbundle --release
+      - name: Instalar dependencias
+        run: flutter pub get
+        working-directory: financasfacil
+      - name: Adicionar http
+        run: flutter pub add http
+        working-directory: financasfacil
+      - name: Compilar AAB
+        run: flutter build appbundle --release
+        working-directory: financasfacil
       - uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: financasfacil/build/app/outputs/bundle/release/app-release.aab

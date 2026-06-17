@@ -1,29 +1,28 @@
-plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
-}
+name: Flutter CI
 
-android {
-    namespace "com.lucasrosatenorio.financasfacil"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+on:
+  push:
+    branches: [ main, principal ]
+  pull_request:
+    branches: [ main, principal ]
 
-    defaultConfig {
-        applicationId "com.lucasrosatenorio.financasfacil"
-        minSdk 21
-        targetSdk flutter.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
-    }
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.debug
-        }
-    }
-}
+    steps:
+      - uses: actions/checkout@v3
 
-flutter {
-    source "../.."
-}
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build APK
+        run: flutter build apk --release
